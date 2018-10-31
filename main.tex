@@ -36,9 +36,29 @@ En este trabajo presentamos una modificación al algoritmo K-means usando una he
 %
 %
 \section{Introduction}
-\subsection{A Subsection Sample}
+
+
+\begin{itemize}
+
+\item El número de documentos que se producen hoy en día
+\item Escribir el problema de agrupamiento
+\item Escribir para qué sirve el agrupamiento
+\item Describir el algoritmo Kmeans
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
 Actualmente el numero de documentos en la web aumenta rápidamente, por tal motivo se necesitan algoritmos capaces de agrupar automáticamente grandes cantidades de datos.
-K-means es un algoritmo de agrupamiento, su objetivo es particionar un conjunto de datos en k grupos basándose en sus características. El agrupamiento se realiza minimizando la suma de distancias entre cada objeto y el centroide de su grupo.
+K-means es un algoritmo de agrupamiento, su objetivo es particionar un conjunto de datos en k grupos basándose en sus características. El agrupamiento se realiza minimizando la suma de distancias entre cada objeto y el centroide de su grupo \cite{ganguly_2018}.
 El algoritmo consta de tres pasos:
 1.	Inicialización: una vez escogido el número de grupos, k, se establecen k centroides en el espacio de los datos, por ejemplo, escogiéndolos aleatoriamente.
 2.	Asignación objetos a los centroides: cada objeto de los datos es asignado a su centroide más cercano.
@@ -47,71 +67,15 @@ Se repiten los pasos 2 y 3 hasta que los centroides no se mueven, o se mueven po
 A pesar de que el algoritmo K-means es muy popular no es escalable para datos de gran tamaño y dimensión.
 El principal cuello de botella de K-means es asignar cada vector no centroide a un grupo.
 
-
-\subsubsection{Sample Heading (Third Level)} Only two levels of
-headings should be numbered. Lower level headings remain unnumbered;
-they are formatted as run-in headings.
-
-\paragraph{Sample Heading (Fourth Level)}
-The contribution should contain no more than four levels of
-headings. Table~\ref{tab1} gives a summary of all heading levels.
-
-\begin{table}
-\caption{Table captions should be placed above the
-tables.}\label{tab1}
-\begin{tabular}{|l|l|l|}
-\hline
-Heading level &  Example & Font size and style\\
-\hline
-Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
-1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
-2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
-3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
-4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
-\hline
-\end{tabular}
-\end{table}
-
-
-\noindent Displayed equations are centered and set on a separate
-line.
-\begin{equation}
-x + y = z
-\end{equation}
-Please try to avoid rasterized images for line-art diagrams and
-schemas. Whenever possible, use vector graphics instead (see
-Fig.~\ref{fig1}).
-
-\begin{figure}
-\includegraphics[width=\textwidth]{fig1.eps}
-\caption{A figure caption is always placed below the illustration.
-Please note that short captions are centered, while long ones are
-justified by the macro package automatically.} \label{fig1}
-\end{figure}
-
-\begin{theorem}
-This is a sample theorem. The run-in heading is set in bold, while
-the following text appears in italics. Definitions, lemmas,
-propositions, and corollaries are styled the same way.
-\end{theorem}
-%
-% the environments 'definition', 'lemma', 'proposition', 'corollary',
-% 'remark', and 'example' are defined in the LLNCS documentclass as well.
-%
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
-For citations of references, we prefer the use of square brackets
-and consecutive numbers. Citations using labels or the author/year
-convention are also acceptable. The following bibliography provides
-a sample reference list with entries for journal
-articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-and a homepage~\cite{ref_url1}. Multiple citations are grouped
-\cite{ref_article1,ref_lncs1,ref_book1},
-\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
 \section{Related Work}
+
+\begin{itemize}
+\item Describir los intentos hasta lo que hizo el autor
+\item Describir el algoritmo del autor
+\item Describir el problema con el algoritmo del autor
+\end{itemize}
+
+
 Se han hecho varias aportaciones para mejorar el algoritmo k-means.
 [la del articulo] desarrollo un algoritmo de partición rápida basado en una heurística de los vecinos mas cercanos. Dado un conjunto de centroides, evitar el calculo de distancia por pares entre vectores para obtener una partición de la colección, en su lugar se ocupó una asignación basada en el vecino mas cercano de cada centro, para esto se utilizo una lista invertida de vectores dispersos.
 También se evito el costoso calculo del centroide verdadero de cada grupo, se propuso una heurística para elegir el centroide de manera eficiente.
@@ -120,14 +84,71 @@ En [12, 19 y 20] se utilizaron estructuras de datos de partición de espacio com
 En [23] reasignaciones de clúster ocurren frecuentemente para puntos que no están cerca de los centroides. Identifica estos puntos al agrupar puntos vecinos usando múltiples arboles de partición.
 En [2 y 18] se utiliza una heurística la cual elije aleatoriamente el primer centroide y utiliza una distribución de probabilidad.
 En [4] se utilizo k-means escalable en el cual cada centroide se ve como una consulta para recuperar una lista de documentos que luego se asignan a ese grupo sin cálculo de distancia.
-[2] k-means ++.
+[2] k-means ++.\cite{manning_2009}
 
 \section{Proposed Solution}
 
+\begin{itemize}
+\item Describir en el paso en el algoritmo en que nos concentramos
+\item Describir la adaptación que se hizo a los demás pasos para que utilizara varios
+centroides, initCentroids() y getClosestCluster()
+\item Tal vez sea bueno escribir un poco sobre el problema de ser cover y la aproximación greedy
+\item introducir un poco de lo que se habla en la siguiente subsección
+\end{itemize}
+
+\subsection{Recomputation of the cluster centres}
+
+\begin{itemize}
+\item Describir el procedimiento
+\item Tal vez la complejidad y desventajas
+\end{itemize}
+
 \section{Experiments}
+
+\subsection{Dataset}
+
+qué conjuntos de datos utilizamos
+
+\begin{itemize}
+\item Por qué no usamos el TREC Microblog Dataset
+\item 20 news, descripción del dataset 
+\item sentiment140 tweets
+\item gender tweets
+\end{itemize}
+
+\subsection{Clustering evaluation}
+\begin{itemize}
+\item Medidas que utilizamos para evaluar el clustering y hablar un poco de las clases
+que hay de cada conjunto que se utilizó
+\item Purity
+\item NMI
+\item RI
+
+\end{itemize}
+
+\subsection{Implementation}
+
+Decir que utilizamos como base lo desarrollado por Ganguly usando Lucene
+\subsection{Compared approaches}
+
+Decir que comparamos esta versión del FPAC M centroids con K means normal, SKMeans y FPAC.
+
+\subsection{Parameters}
+
+
+
+\begin{itemize}
+\item El valor de K
+\item el número de iteraciones
+\item El valor de M
+\end{itemize}
 
 \section{Results}
 
+\begin{itemize}
+\item Por cada dataset una gráfica del NMI, Purity y RI
+\item 
+\end{itemize}
 \section{Conclusions and future work}
 
 %
@@ -136,28 +157,7 @@ En [4] se utilizo k-means escalable en el cual cada centroide se ve como una con
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
+\bibliographystyle{splncs04}
+\bibliography{references}
 %
-\begin{thebibliography}{8}
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
-
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
-
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-Oct 2017
-\end{thebibliography}
 \end{document}
