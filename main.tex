@@ -13,11 +13,11 @@
 %
 \title{A greedy set cover approach for the recomputation of the cluster centres in the FPAC Algorithm}
 
-
+\titlerunning{Set cover approach for the recomputation of the cluster centres}
 \author{Ivan Feliciano\inst{1} \and
 Edgar Hernandez-Gonzalez\inst{2}}
 %
-\authorrunning{I. Feliciano et al.}
+%\authorrunning{I. Feliciano et al.}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
@@ -38,14 +38,74 @@ En este trabajo presentamos una modificación al algoritmo K-means usando una he
 \section{Introduction}
 
 
-\begin{itemize}
+The amount of information, specifically text, that is generated everyday
+is increasing rapidly and dramatically. This necessitates application of effective and efficient content management techniques to fulfill the task of finding groups of similar documents in a collection of documents. This task is also known as 
+clustering. These document clusters can then be useful for a variety
+of applications, such as document alignment, information retrieval
+(IR), text classification, etc \cite{ganguly_2018}.
 
-\item El número de documentos que se producen hoy en día
-\item Escribir el problema de agrupamiento
-\item Escribir para qué sirve el agrupamiento
-\item Describir el algoritmo Kmeans
+We can define the goal in clustering as follows. 
+Given $D = \{d_1 , \dots , d_N \}$, a set of documents, 
+$K$, a desired number of clusters and 
+an objective objective function that evaluates the quality of a clustering.
+we want to compute an assignment $\gamma : D \rightarrow \{1, \dots , K \}$ that minimizes (or, in other cases,
+maximizes) the objective function. In most cases, we also demand that $\gamma$ is
+surjective, that is, that none of the $K$ clusters is empty.
+The objective function is often defined in terms of similarity or distance between documents.
 
-\end{itemize}
+$K$-means is perhaps the most widely used clustering algorithm
+because of its simplicity and efficiency. The objective in $K$-means clustering is to minimize the average distance between documents and their
+centroids or, equivalently, to maximize the similarity between documents
+and their centroids.
+
+$K$-means is an EM-based algorithm, in which starting with a set of randomly 
+chosen initial centres, each input point is repeatedly assigned to its
+nearest cluster centre, the E-step. The cluster centres are then recomputed by making use of the current assignments, the M-step.
+
+
+The $K$-means clustering algorithm
+does not scale well to datasets that are considerably large in size
+and large in dimensionality, e.g. large document collections where
+each document is a sparse vector of large dimension (vocabulary
+size of the collection).
+In the case of clustering vectors of large
+dimensionality, the computational overhead of the $K$-means algorithm arises from both the E and the M steps, that is when: (a)
+assigning vectors to one of the centres (interchangeably referred to
+as ‘cluster centres’); and (b) recomputing the centres. Concretely
+speaking, the computation required to assign each vector in the
+collection to one of the centroids is expensive because it involves
+computing the similarity of this data point with every cluster cen-
+tre, which is an expensive operation if the collection is very large.
+
+Since the introduction to the $K$-means algorithm, research
+has progressed towards making it more efficient for cases where
+the number of data points or the dimensionality of the data is
+large, e.g. the case when the dataset is comprised of a collection
+of documents.
+
+The Fast Partitional Clustering Algorithm (FPAC) \cite{ganguly_2018}
+involves the nearest neighbour based heuristic to
+scale up $K$-means clustering for large document collections.
+The main contribution of the FPAC on the $K$-means algorithm
+is the use of an operation, namely $TOP(x)$ which gives a list
+of the top mos similar vectors with respect to the current vector.
+This operation is used in the three fundamental steps of the 
+$K$-mean, the selection of the initial cluster centres,
+the assignment of a cluster to a non-centroid vector $d$, and 
+the recomputation of the centre clusters.
+
+Our work is based on the FPAC algorithm and we have focused in the recomputation of the centroids step.
+In the FPAC algorithm they select as the cluster centroid the 
+vector with the highest number of distinct terms. Despite the efficiency
+of just take the vector with the maximum number of unique terms,
+what happen if the set of terms in the vector is disjoint from 
+the other set of terms in the cluster vocabulary. That 
+case inspired us to develop a solution based on the set cover problem.
+
+Our contribution is the extension of the method for the recomputation of  the cluster centroids. Instead of using just one centroid that tries to
+cover most of the vocabulary within a cluster, we proposed the selection
+of $M$ centroids such that they cover the maximum number of terms 
+in a cluster vocabulary.
 
 
 
@@ -56,18 +116,31 @@ En este trabajo presentamos una modificación al algoritmo K-means usando una he
 
 
 
-
-Actualmente el numero de documentos en la web aumenta rápidamente, por tal motivo se necesitan algoritmos capaces de agrupar automáticamente grandes cantidades de datos.
-K-means es un algoritmo de agrupamiento, su objetivo es particionar un conjunto de datos en k grupos basándose en sus características. El agrupamiento se realiza minimizando la suma de distancias entre cada objeto y el centroide de su grupo \cite{ganguly_2018}.
-El algoritmo consta de tres pasos:
-1.	Inicialización: una vez escogido el número de grupos, k, se establecen k centroides en el espacio de los datos, por ejemplo, escogiéndolos aleatoriamente.
-2.	Asignación objetos a los centroides: cada objeto de los datos es asignado a su centroide más cercano.
-3.	Actualización centroides: se actualiza la posición del centroide de cada grupo tomando como nuevo centroide la posición del promedio de los objetos pertenecientes a dicho grupo.
-Se repiten los pasos 2 y 3 hasta que los centroides no se mueven, o se mueven por debajo de una distancia umbral en cada paso.
-A pesar de que el algoritmo K-means es muy popular no es escalable para datos de gran tamaño y dimensión.
-El principal cuello de botella de K-means es asignar cada vector no centroide a un grupo.
+%\begin{itemize}
+%
+%\item El número de documentos que se producen hoy en día
+%\item Escribir el problema de agrupamiento
+%\item Escribir para qué sirve el agrupamiento
+%\item Describir el algoritmo Kmeans
+%
+%\end{itemize}
+%
+%
+%
+%
+%Actualmente el numero de documentos en la web aumenta rápidamente, por tal motivo se necesitan algoritmos capaces de agrupar automáticamente grandes cantidades de datos.
+%K-means es un algoritmo de agrupamiento, su objetivo es particionar un conjunto de datos en k grupos basándose en sus características. El agrupamiento se realiza minimizando la suma de distancias entre cada objeto y el centroide de su grupo \cite{ganguly_2018}.
+%El algoritmo consta de tres pasos:
+%1.	Inicialización: una vez escogido el número de grupos, k, se establecen k centroides en el espacio de los datos, por ejemplo, escogiéndolos aleatoriamente.
+%2.	Asignación objetos a los centroides: cada objeto de los datos es asignado a su centroide más cercano.
+%3.	Actualización centroides: se actualiza la posición del centroide de cada grupo tomando como nuevo centroide la posición del promedio de los objetos pertenecientes a dicho grupo.
+%Se repiten los pasos 2 y 3 hasta que los centroides no se mueven, o se mueven por debajo de una distancia umbral en cada paso.
+%A pesar de que el algoritmo K-means es muy popular no es escalable para datos de gran tamaño y dimensión.
+%El principal cuello de botella de K-means es asignar cada vector no centroide a un grupo.
 
 \section{Related Work}
+
+
 
 \begin{itemize}
 \item Describir los intentos hasta lo que hizo el autor
