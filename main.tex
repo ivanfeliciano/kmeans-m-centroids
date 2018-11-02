@@ -45,9 +45,9 @@ of applications, such as document alignment, information retrieval
 (IR), text classification, etc \cite{ganguly_2018}.
 
 We can define the goal in clustering as follows. 
-Given $D = \{d_1 , \dots , d_N \}$, a set of documents, 
-$K$, a desired number of clusters and 
-an objective objective function that evaluates the quality of a clustering.
+Given a set of documents, $D = \{d_1 , \dots , d_N \}$,
+a desired number of clusters, $K$,  and 
+an objective function that evaluates the quality of a clustering.
 we want to compute an assignment $\gamma : D \rightarrow \{1, \dots , K \}$ that minimizes (or, in other cases,
 maximizes) the objective function. In most cases, we also demand that $\gamma$ is
 surjective, that is, that none of the $K$ clusters is empty.
@@ -140,24 +140,73 @@ in a cluster vocabulary.
 
 \section{Related Work}
 
+The Fast PArtitional Clustering (FPAC) algorithm makes use of the
+nearest neighbour based heuristic. This heuristic consists in using
+a set of the most similar vector from a each cluster vector $x$. 
+The operation of getting the set of the top nearest vectors 
+is called $TOP(x)$ and is efficiently computated by using a 
+inverted index data structure.
+
+In a very general way we can hightlight three fundamental
+steps in the FPAC algorithm: the selection of the initial centroids, the assinment of a cluster to a non-centroid vector and the recomputation of the cluster centres.
+
+To ensure that the initially selected cluster centres are dissimilar
+to each other, they select the first cluster centre, $C_1$, randomly from
+the whole collection. The next cluster centroid, $C_2$, is then selected
+such that it has a low similarity with the already chosen centroid.
+More precisely, $C_2$ it is a randomly chosen vector from the collection
+that is composed by the vectors that do not occur in the retreived list of 
+$C_1$, $TOP(C_1)$. For selecting $C_3$, a vector is chosen at random that
+does not occur in the union of the retrieved lists for $C_1$ and $C_2$, and
+the process continues till $K$ cluster centres are obtained.
+
+To assign a cluster to a non-centroid vector $d$, they use the $K$ centroids
+as queries. If the cluster centres themselves are dissimilar to
+each other, it is expected that the ranked lists retrieved for each
+centre will have a small intersection. If a vector $d$ it is included it
+is retrieved in the top set of only a single ranked list, $TOP(C_k)$,
+it is included in the set of vector assigned to the cluster corresponding
+to $C_k$. If a vector $d$ is retrieved in multiple ranked lists, 
+it is assigned to the cluster for which the normalized
+similarity score is maximum. The vectors which are not retrieved in the
+union set of the ranked lists for each 
+centre are assigned randomly to any one of the $K$ cluster centroids.
+
+For computing the new centroid for a cluster they treat the vector 
+which has the maximum number of unique terms within a cluster (i.e. 
+the one with maximum length) as the updated cluster centre.
 
 
-\begin{itemize}
-\item Describir los intentos hasta lo que hizo el autor
-\item Describir el algoritmo del autor
-\item Describir el problema con el algoritmo del autor
-\end{itemize}
+The results they obtained from the experiments of the FPAC algorithm
+compared to the K-means and SK-means algorithms,
+show an increase in the execution speed attributed to the IR-based approach
+and the two additional heuristics related to initial centroid selection and 
+centroid recomputation.
+
+The FPAC similarity-based initial centroids selection
+produces the best results in terms of clustering effectiveness.
 
 
-Se han hecho varias aportaciones para mejorar el algoritmo k-means.
-[la del articulo] desarrollo un algoritmo de partición rápida basado en una heurística de los vecinos mas cercanos. Dado un conjunto de centroides, evitar el calculo de distancia por pares entre vectores para obtener una partición de la colección, en su lugar se ocupó una asignación basada en el vecino mas cercano de cada centro, para esto se utilizo una lista invertida de vectores dispersos.
-También se evito el costoso calculo del centroide verdadero de cada grupo, se propuso una heurística para elegir el centroide de manera eficiente.
-En [9] los autores utilizan la heurística más lejana primero que consiste en seleccionar los centroides iniciales y evitar los cálculos de distancia redundante desde los no centroides a los centros.
-En [12, 19 y 20] se utilizaron estructuras de datos de partición de espacio como kd-trees. Esto aumenta la eficacia de k-means, pero solo para pocas dimensiones
-En [23] reasignaciones de clúster ocurren frecuentemente para puntos que no están cerca de los centroides. Identifica estos puntos al agrupar puntos vecinos usando múltiples arboles de partición.
-En [2 y 18] se utiliza una heurística la cual elije aleatoriamente el primer centroide y utiliza una distribución de probabilidad.
-En [4] se utilizo k-means escalable en el cual cada centroide se ve como una consulta para recuperar una lista de documentos que luego se asignan a ese grupo sin cálculo de distancia.
-[2] k-means ++.\cite{manning_2009}
+
+
+%
+%
+%\begin{itemize}
+%\item Describir los intentos hasta lo que hizo el autor
+%\item Describir el algoritmo del autor
+%\item Describir el problema con el algoritmo del autor
+%\end{itemize}
+%
+%
+%Se han hecho varias aportaciones para mejorar el algoritmo k-means.
+%[la del articulo] desarrollo un algoritmo de partición rápida basado en una heurística de los vecinos mas cercanos. Dado un conjunto de centroides, evitar el calculo de distancia por pares entre vectores para obtener una partición de la colección, en su lugar se ocupó una asignación basada en el vecino mas cercano de cada centro, para esto se utilizo una lista invertida de vectores dispersos.
+%También se evito el costoso calculo del centroide verdadero de cada grupo, se propuso una heurística para elegir el centroide de manera eficiente.
+%En [9] los autores utilizan la heurística más lejana primero que consiste en seleccionar los centroides iniciales y evitar los cálculos de distancia redundante desde los no centroides a los centros.
+%En [12, 19 y 20] se utilizaron estructuras de datos de partición de espacio como kd-trees. Esto aumenta la eficacia de k-means, pero solo para pocas dimensiones
+%En [23] reasignaciones de clúster ocurren frecuentemente para puntos que no están cerca de los centroides. Identifica estos puntos al agrupar puntos vecinos usando múltiples arboles de partición.
+%En [2 y 18] se utiliza una heurística la cual elije aleatoriamente el primer centroide y utiliza una distribución de probabilidad.
+%En [4] se utilizo k-means escalable en el cual cada centroide se ve como una consulta para recuperar una lista de documentos que luego se asignan a ese grupo sin cálculo de distancia.
+%[2] k-means ++.\cite{manning_2009}
 
 \section{Proposed Solution}
 
