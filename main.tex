@@ -31,7 +31,7 @@ National Institute of Astrophysics, Optics and Electronics\\
 \begin{abstract}
 En este trabajo presentamos una modificación al algoritmo K-means usando una heurística que permite hacer el recalculo de centroides de una manera diferente al k-means tradicional. El procedimiento se basa en…primero, después, por ultimo.
 
-\keywords{Clustering  \and Information Retrieval \and FPAC \and K-Means}
+\keywords{Clustering  \and Information Retrieval \and FPAC}
 \end{abstract}
 %
 %
@@ -281,73 +281,122 @@ X = \bigcup_{S \in \mathcal{C}} S.
 Using this approach we can define as $V_k$ the set of terms in the cluster $k$. This is analogous to the set $X$. The set of vectors within a cluster $k$ are the family $\mathcal{F}_k$. We want to find a subset $\mathcal{C}_k \subseteq \mathcal{F}$, such that $|\mathcal{C}_k| = M$ and whose members cover all or at least most of $V_k$.
 
 We use a greedy method for solving this problem. It works iterating
-through each cluster and over each of the vectors associated with it. We pick as one of the new centroids of the cluster, the vector $C_{ik} \in \mathcal{F}_k$ that covers the greatest number of remaining elements that are uncovered in the set $V_k$. This process is repeated until the set
+through each cluster and over each of the vectors associated with it. We pick as one of the new centroids of the cluster, the vector $C_{ki} \in \mathcal{F}_k$ that covers the greatest number of remaining elements that are uncovered in the set $V_k$. This process is repeated until the set
 $V_k$ is completely covered or have been selected $M$ cluster centres.
 This method is explained in detail in the Algorithm \ref{alg1}.
 
 \begin{algorithm}
 \begin{algorithmic}
-\STATE $i\gets 10$
-\FOR {k = 1 \TO K}
-\STATE {GET Vocabulary from cluster K}
+\FOR {$k = 1$ \TO $K$}
+\STATE{$i \gets 1$}
+\WHILE{$V_k \neq \emptyset $ \AND $i \leq M$} 
+\STATE{$C_{ki} \gets d \in \mathcal{F}_k$ that maximizes $|d \cap V_k|$}
+\STATE{$i \gets i + 1$}
+\STATE{$V_k \gets V_k - C_{ki}$}
+\STATE{$\mathcal{C}_k \gets \mathcal{C}_k \cup \{C_{ki}\}$}
+\ENDWHILE
 \ENDFOR
-\IF {$i\geq 5$} 
-        \STATE $i\gets i-1$
-\ELSE
-        \IF {$i\leq 3$}
-                \STATE $i\gets i+2$
-        \ENDIF
-\ENDIF 
+
 \caption{Greedy approximation algorithm for the recomputation of cluster centres.\label{alg1}}
 \end{algorithmic}
 \end{algorithm}
-\begin{itemize}
-\item Describir el procedimiento
-\item Tal vez la complejidad y desventajas
-\end{itemize}
 
 \section{Experiments}
 
 \subsection{Dataset}
 
-En nuestros experimentos utilizamos varias colecciones de datos. Con esto se demuestra que nuestro algoritmo es compatible con una gran variedad de conjuntos de datos de texto. A continuación, se describen los tres conjuntos de datos utilizados.
+We could not replicate the experiments on the same collection of
+documents proposed by Ganguly\cite{ganguly_2018}. However 
+we choose two datasets: the 20 Newsgroups and the sentiment140 dataset.
+The 20 Newsgroup consists of 20000 messages taken from 20 newsgroups. 
+The sentiment140 collection it is composed by 1.6 million tweets and contains a list of words and their associations with positive and negative sentiment.
 
-Sentiment140 dataset 1.6 millones de tweets divididos en tres clases, la polaridad del tweet está dividida en 0 (negativo), 2 (neutral) y 4(positivo). Los creadores de la base de datos asumen que los tweets con emoticones como son positivos y con emoticones son negativos.
 
-Twitter User Gender Classification
-Predict user gender based on Twitter profile information, this data base contiene 20,051 datos, separados por tres clases hombre, mujer y marca para genero desconocido.
+\begin{table}
+\centering
+\caption{DataSets (ACOMODAR).}\label{tab1}
+\begin{tabular}{|l|l|l|}
+\hline
+Name DataSet &  Data & Labels\\
+\hline
+Sentiment140 &  1,600,000& 2\\
+20 Newsgroups & 11,293 & 20\\
+\hline
+\end{tabular}
+\end{table}
 
-20 newsgroups
-20000 mensajes de 20 grupos de noticias
-En el articulo de Ganguly se utilizo la base de datos de TREC Microblog collection la cual cuenta con aproximadamente 14 millones de tweets, pero en nuestra investigación decidimos no utilizarla ya que el tiempo que se necesita para descargar la base de datos esta fuera de nuestro alcance.
-
+%
+%\begin{itemize}
+%\item Por qué no usamos el TREC Microblog Dataset
+%\item 20 news, descripción del dataset 
+%\item sentiment140 tweets
+%\item gender tweets
+%\end{itemize}
 
 \subsection{Clustering evaluation}
-\begin{itemize}
-\item Medidas que utilizamos para evaluar el clustering y hablar un poco de las clases
-que hay de cada conjunto que se utilizó
-\item Purity
-\item NMI
-\item RI
 
-\end{itemize}
+This section introduces about external criteria of clustering quality. Purity is
+a simple and transparent evaluation measure. Normalized mutual information
+can be information-theoretically interpreted. The Rand index penalizes both
+false-positive and false-negative decisions during clustering.
+To compute purity, each cluster is assigned to the class which is most frequent
+in the cluster, and then the accuracy of this assignment is measured
+by counting the number of correctly assigned documents and dividing by N.
+Formally:
+\begin{equation}
+x + y = z
+\end{equation}
 
-\subsection{Implementation}
+Bad clusterings
+have purity values close to 0, a perfect clustering has a purity of 1.
+A measure that allows us to make this tradeoff is normalized mutual information or NMI:
+\begin{equation}
+x + y = z
+\end{equation}
 
-El algoritmo de cluster se implementó en Java utilizando la librería Lucene que es una herramienta de indexación, se tomo como base el trabajo de [Debasis Ganguly] en cual se encuentra disponible en (código de github). Talvez mencionar las características de procesador y memoria RAM de laptop de Ivan.
+I is mutual information
+\begin{equation}
+x + y = z
+\end{equation}
+
+H is entropy
+\begin{equation}
+x + y = z
+\end{equation}
+
+We want to assign two documents to the same
+cluster if and only if they are similar. A true-positive (TP) decision assigns
+two similar documents to the same cluster, a true-negative (TN) decision assigns
+two dissimilar documents to different clusters. There are two types of
+errors we can commit. A false-positive (FP) decision assigns two dissimilar
+documents to the same cluster. A false-negative (FN) decision assigns two
+similar documents to different clusters. The Rand index (RI) measures the RI
+percentage of decisions that are correct. That is, it is simply accuracy
+\begin{equation}
+x + y = z
+\end{equation}
+
+
 \subsection{Compared approaches}
 
-Decir que comparamos esta versión del FPAC M centroids con K means normal, SKMeans y FPAC.
+
+We use four baselines clustering methods. We employ the next algorithms: 
+$K$-means, $SK$-means and two versions of the FPAC, a version with
+the recomputation of the centre clusters using the classic approach from
+the $K$-means and the other using the heuristics-based approach of maximum
+term coverage. We compare the previous procedures with our FPAC version
+that uses $M$ centroids.
 
 \subsection{Parameters}
 
 
 
-\begin{itemize}
-\item El valor de K
-\item el número de iteraciones
-\item El valor de M
-\end{itemize}
+%
+%\begin{itemize}
+%\item El valor de K
+%\item el número de iteraciones
+%\item El valor de M
+%\end{itemize}
 
 \section{Results}
 
