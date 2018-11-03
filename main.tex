@@ -31,7 +31,7 @@ National Institute of Astrophysics, Optics and Electronics\\
 \begin{abstract}
 En este trabajo presentamos una modificación al algoritmo K-means usando una heurística que permite hacer el recalculo de centroides de una manera diferente al k-means tradicional. El procedimiento se basa en…primero, después, por ultimo.
 
-\keywords{Clustering  \and Information Retrieval \and FPAC}
+\keywords{Clustering  \and Information Retrieval \and FPAC \and K-Means}
 \end{abstract}
 %
 %
@@ -310,14 +310,17 @@ This method is explained in detail in the Algorithm \ref{alg1}.
 
 \subsection{Dataset}
 
-qué conjuntos de datos utilizamos
+En nuestros experimentos utilizamos varias colecciones de datos. Con esto se demuestra que nuestro algoritmo es compatible con una gran variedad de conjuntos de datos de texto. A continuación, se describen los tres conjuntos de datos utilizados.
 
-\begin{itemize}
-\item Por qué no usamos el TREC Microblog Dataset
-\item 20 news, descripción del dataset 
-\item sentiment140 tweets
-\item gender tweets
-\end{itemize}
+Sentiment140 dataset 1.6 millones de tweets divididos en tres clases, la polaridad del tweet está dividida en 0 (negativo), 2 (neutral) y 4(positivo). Los creadores de la base de datos asumen que los tweets con emoticones como son positivos y con emoticones son negativos.
+
+Twitter User Gender Classification
+Predict user gender based on Twitter profile information, this data base contiene 20,051 datos, separados por tres clases hombre, mujer y marca para genero desconocido.
+
+20 newsgroups
+20000 mensajes de 20 grupos de noticias
+En el articulo de Ganguly se utilizo la base de datos de TREC Microblog collection la cual cuenta con aproximadamente 14 millones de tweets, pero en nuestra investigación decidimos no utilizarla ya que el tiempo que se necesita para descargar la base de datos esta fuera de nuestro alcance.
+
 
 \subsection{Clustering evaluation}
 \begin{itemize}
@@ -331,7 +334,7 @@ que hay de cada conjunto que se utilizó
 
 \subsection{Implementation}
 
-Decir que utilizamos como base lo desarrollado por Ganguly usando Lucene
+El algoritmo de cluster se implementó en Java utilizando la librería Lucene que es una herramienta de indexación, se tomo como base el trabajo de [Debasis Ganguly] en cual se encuentra disponible en (código de github). Talvez mencionar las características de procesador y memoria RAM de laptop de Ivan.
 \subsection{Compared approaches}
 
 Decir que comparamos esta versión del FPAC M centroids con K means normal, SKMeans y FPAC.
