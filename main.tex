@@ -411,6 +411,53 @@ that uses $M$ centroids.
 
 \section{Results}
 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{graph20.png}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{graphtweets.png}
+\end{figure}
+
+\begin{table}[]
+\centering
+\caption{Comparasion betweet the clustering methods and their variants for the Sentiment140 dataset.}
+\begin{tabular}{lllll}
+\hline
+Clustering algorithm & Purity  & NMI      & RI      & \begin{tabular}[c]{@{}l@{}}Change ratio\\ average\end{tabular} \\ \hline
+K-means              & 0.50022 & 0.000014 & 0.49999 & 0.00414                                                      \\
+SK-means             & 0.50135 & 0.000005 & 0.49999 & 0.49973                                                      \\
+FPAC                 & 0.50022 & 0.000016 & 0.49999 & 0.50036                                                      \\
+FPAC-True centroid   & 0.51440 & 0.000601 & 0.50040 & 0.46066                                                      \\
+FPAC-10 centroids    & 0.50021 & 0.000000 & 0.49999 & 0.49997                                                      \\
+FPAC-50 centroids    & 0.50189 & 0.000010 & 0.50000 & 0.49937                                                      \\ \hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[]
+\centering
+\caption{Comparasion betweet the clustering methods and their variants for the 20 newsgruop dataset.}
+\begin{tabular}{lllll}
+\hline
+Clustering algorithm & Purity  & NMI      & RI      & \begin{tabular}[c]{@{}l@{}}Change ratio\\ average\end{tabular} \\ \hline
+K-means              & 0.12556 & 0.07351 & 0.70652 & 0.01005
+ \\
+SK-means             & 0.06800 & 0.00581 & 0.90464 & 0.94835                                                      \\
+FPAC                 & 0.10962 & 0.02773 & 0.90221 & 0.95339 \\
+FPAC-True centroid   & 0.17072 & 0.06257 & 0.90663 & 0.52449
+ \\
+FPAC-10 centroids    & 0.07004 & 0.00547 & 0.90464 & 0.93315 \\
+FPAC-50 centroids    & 0.07084 & 0.00586 & 0.90464 & 0.86606 \\
+FPAC-100 centroids    & 0.06818 & 0.00492 & 0.90462 & 0.78195 \\ \hline
+\end{tabular}
+\end{table}
+
+
 \begin{itemize}
 \item Por cada dataset una gráfica del NMI, Purity y RI
 \item 
