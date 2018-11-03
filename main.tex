@@ -281,43 +281,43 @@ X = \bigcup_{S \in \mathcal{C}} S.
 Using this approach we can define as $V_k$ the set of terms in the cluster $k$. This is analogous to the set $X$. The set of vectors within a cluster $k$ are the family $\mathcal{F}_k$. We want to find a subset $\mathcal{C}_k \subseteq \mathcal{F}$, such that $|\mathcal{C}_k| = M$ and whose members cover all or at least most of $V_k$.
 
 We use a greedy method for solving this problem. It works iterating
-through each cluster and over each of the vectors associated with it. We pick as one of the new centroids of the cluster, the vector $C_{ik} \in \mathcal{F}_k$ that covers the greatest number of remaining elements that are uncovered in the set $V_k$. This process is repeated until the set
+through each cluster and over each of the vectors associated with it. We pick as one of the new centroids of the cluster, the vector $C_{ki} \in \mathcal{F}_k$ that covers the greatest number of remaining elements that are uncovered in the set $V_k$. This process is repeated until the set
 $V_k$ is completely covered or have been selected $M$ cluster centres.
 This method is explained in detail in the Algorithm \ref{alg1}.
 
 \begin{algorithm}
 \begin{algorithmic}
-\STATE $i\gets 10$
-\FOR {k = 1 \TO K}
-\STATE {GET Vocabulary from cluster K}
+\FOR {$k = 1$ \TO $K$}
+\STATE{$i \gets 1$}
+\WHILE{$V_k \neq \emptyset $ \AND $i \leq M$} 
+\STATE{$C_{ki} \gets d \in \mathcal{F}_k$ that maximizes $|d \cap V_k|$}
+\STATE{$i \gets i + 1$}
+\STATE{$V_k \gets V_k - C_{ki}$}
+\STATE{$\mathcal{C}_k \gets \mathcal{C}_k \cup \{C_{ki}\}$}
+\ENDWHILE
 \ENDFOR
-\IF {$i\geq 5$} 
-        \STATE $i\gets i-1$
-\ELSE
-        \IF {$i\leq 3$}
-                \STATE $i\gets i+2$
-        \ENDIF
-\ENDIF 
+
 \caption{Greedy approximation algorithm for the recomputation of cluster centres.\label{alg1}}
 \end{algorithmic}
 \end{algorithm}
-\begin{itemize}
-\item Describir el procedimiento
-\item Tal vez la complejidad y desventajas
-\end{itemize}
 
 \section{Experiments}
 
 \subsection{Dataset}
 
-qué conjuntos de datos utilizamos
+We could not replicate the experiments on the same collection of
+documents proposed by Ganguly\cite{ganguly_2018}. However 
+we choose two datasets: the 20 Newsgroups and the sentiment140 dataset.
+The 20 Newsgroup consists of 20000 messages taken from 20 newsgroups. 
+The sentiment140 collection it is composed by 1.6 million tweets and contains a list of words and their associations with positive and negative sentiment.
 
-\begin{itemize}
-\item Por qué no usamos el TREC Microblog Dataset
-\item 20 news, descripción del dataset 
-\item sentiment140 tweets
-\item gender tweets
-\end{itemize}
+%
+%\begin{itemize}
+%\item Por qué no usamos el TREC Microblog Dataset
+%\item 20 news, descripción del dataset 
+%\item sentiment140 tweets
+%\item gender tweets
+%\end{itemize}
 
 \subsection{Clustering evaluation}
 \begin{itemize}
@@ -328,10 +328,10 @@ que hay de cada conjunto que se utilizó
 \item RI
 
 \end{itemize}
-
-\subsection{Implementation}
-
-Decir que utilizamos como base lo desarrollado por Ganguly usando Lucene
+%
+%\subsection{Implementation}
+%
+%Decir que utilizamos como base lo desarrollado por Ganguly usando Lucene
 \subsection{Compared approaches}
 
 Decir que comparamos esta versión del FPAC M centroids con K means normal, SKMeans y FPAC.
