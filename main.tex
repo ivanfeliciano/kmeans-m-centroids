@@ -1,6 +1,7 @@
 \documentclass[runningheads]{llncs}
 
 \usepackage[utf8]{inputenc}
+\usepackage{algorithmic, algorithm}
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
@@ -11,7 +12,7 @@
 
 \begin{document}
 %
-\title{A greedy set cover approach for the recomputation of the cluster centres in the FPAC Algorithm}
+\title{A greedy set-covering approach for the recomputation of the cluster centres in the FPAC algorithm}
 
 \titlerunning{Set cover approach for the recomputation of the cluster centres}
 \author{Ivan Feliciano\inst{1} \and
@@ -243,8 +244,7 @@ First we select a random vector $C_{11}$, as the centroid of the first cluster, 
 this vectors as a centroid of the first cluster, so we get the centres 
 $C_{11}, C_{12},  \dots, C_{1M}$. For the second cluster centroids
 we get one unrelated vector from the first cluster centres and 
-repeat the computation of the $M-1$ most similars vectors and they 
-assigment to this centroid, such that we get $C_{21}, \dots, C_{2M}$.
+repeat the computation of the $M-1$ most similars vectors and they are defined as the cluster centres for this cluster, so we get $C_{21}, \dots, C_{2M}$.
 For the next cluster, a vector is chosen such that does not related with the centroids of the first two clusters, and define the $M-1$ remaing cluster centres of this cluster from the top list of that vector. This process continues until we have defined the $M$ cluster centres for $K$ clusters.
 
 \subsection{Clustering non-centroid vectors}
@@ -253,8 +253,7 @@ Compared to the FPAC algorithm, instead of only iterate through
 $K$ clusters, we should also go through $M$ vectors for each cluster.
 We assign a non-centroid vector to the cluster for which the sum of 
 normalized similarity score of the $M$ centroids of each cluster is maximum.
-For doing that we obtain the ranked lists of each centroid to check if 
-it is similar. For each cluster we compute a local normalized similarity score and assign the vector to the cluster with the highest value.
+For doing that we obtain the top list of vectors of each centroid to check if it a vector is similar to one of them. For each cluster we compute a local normalized similarity score and assign the vector to the cluster with the highest value.
 
 If a non-centroid vector does not appear in any one of the
 top lists we randomly assign a cluster to it.
@@ -262,16 +261,46 @@ top lists we randomly assign a cluster to it.
 
 \subsection{Recomputation of the cluster centres}
 
+For computing the new set of $M$ centroids for each cluster
+we try a solution similar to the greedy approximation
+algorithm  for the set covering problem.
+An instance $(X, \mathcal{F})$ of the set-covering problem consists of
+a finite set $X$ and a family $\mathcal{F}$ of subsets of $X$, such that 
+every element of $X$ belongs to at least one subset in $\mathcal{F}$
 
+\[
+X = \bigcup_{S\in \mathcal{F}} S.
+\]
 
-%\begin{itemize}
-%\item Describir en el paso en el algoritmo en que nos concentramos
-%\item Describir la adaptación que se hizo a los demás pasos para que utilizara varios
-%centroides, initCentroids() y getClosestCluster()
-%\item Tal vez sea bueno escribir un poco sobre el problema de ser cover y la aproximación greedy
-%\item introducir un poco de lo que se habla en la siguiente subsección
-%\end{itemize}
+We say that a subset $S\in \mathcal{F}$ covers its elements. The problem is to find a minimum-size subset $\mathcal{C} \subseteq \mathcal{F}$ whose members cover all of $X$
 
+\[
+X = \bigcup_{S \in \mathcal{C}} S.
+\]
+
+Using this approach we can define as $V_k$ the set of terms in the cluster $k$. This is analogous to the set $X$. The set of vectors within a cluster $k$ are the family $\mathcal{F}_k$. We want to find a subset $\mathcal{C}_k \subseteq \mathcal{F}$, such that $|\mathcal{C}_k| = M$ and whose members cover all or at least most of $V_k$.
+
+We use a greedy method for solving this problem. It works iterating
+through each cluster and over each of the vectors associated with it. We pick as one of the new centroids of the cluster, the vector $C_{ik} \in \mathcal{F}_k$ that covers the greatest number of remaining elements that are uncovered in the set $V_k$. This process is repeated until the set
+$V_k$ is completely covered or have been selected $M$ cluster centres.
+This method is explained in detail in the Algorithm \ref{alg1}.
+
+\begin{algorithm}
+\begin{algorithmic}
+\STATE $i\gets 10$
+\FOR {k = 1 \TO K}
+\STATE {GET Vocabulary from cluster K}
+\ENDFOR
+\IF {$i\geq 5$} 
+        \STATE $i\gets i-1$
+\ELSE
+        \IF {$i\leq 3$}
+                \STATE $i\gets i+2$
+        \ENDIF
+\ENDIF 
+\caption{Greedy approximation algorithm for the recomputation of cluster centres.\label{alg1}}
+\end{algorithmic}
+\end{algorithm}
 \begin{itemize}
 \item Describir el procedimiento
 \item Tal vez la complejidad y desventajas
