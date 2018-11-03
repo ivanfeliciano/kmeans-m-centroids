@@ -30,7 +30,7 @@ National Institute of Astrophysics, Optics and Electronics\\
 \begin{abstract}
 En este trabajo presentamos una modificación al algoritmo K-means usando una heurística que permite hacer el recalculo de centroides de una manera diferente al k-means tradicional. El procedimiento se basa en…primero, después, por ultimo.
 
-\keywords{First keyword  \and Second keyword \and Another keyword.}
+\keywords{Clustering  \and Information Retrieval \and FPAC}
 \end{abstract}
 %
 %
@@ -141,7 +141,7 @@ in a cluster vocabulary.
 \section{Related Work}
 
 The Fast PArtitional Clustering (FPAC) algorithm makes use of the
-nearest neighbour based heuristic. This heuristic consists in using
+nearest neighbour based heuristic. This heuristic consists of using
 a set of the most similar vector from a each cluster vector $x$. 
 The operation of getting the set of the top nearest vectors 
 is called $TOP(x)$ and is efficiently computated by using a 
@@ -185,9 +185,22 @@ centroid recomputation.
 
 The FPAC similarity-based initial centroids selection
 produces the best results in terms of clustering effectiveness.
+The maximum term coverage based heuristics yields better in
+comparasion to SK-means. However, the results with the
+maximum term coverage heuristics is worse than a version of
+the true centroids calculation of FPAC.
 
-
-
+We can think of an example that shows why the coverage of terms 
+with the centroid of maximum length is not a good enough solution for
+the recomputation of the cluster centres.
+%If we think that the new centroid should be the most
+%representative vector within a cluster, 
+We can see
+that the vector with the maximum number of terms
+could be one such its intersection with the others vectors would be the empty set or even worse, what if the terms composing the
+cluster centre are not useful even if it has a lot of terms. We concentrate our efforts
+for solving the first case by using a set cover approach where
+we select $M$ centroids, for each cluster, that cover most of the terms in a cluster vocabulary. 
 
 %
 %
@@ -210,15 +223,54 @@ produces the best results in terms of clustering effectiveness.
 
 \section{Proposed Solution}
 
-\begin{itemize}
-\item Describir en el paso en el algoritmo en que nos concentramos
-\item Describir la adaptación que se hizo a los demás pasos para que utilizara varios
-centroides, initCentroids() y getClosestCluster()
-\item Tal vez sea bueno escribir un poco sobre el problema de ser cover y la aproximación greedy
-\item introducir un poco de lo que se habla en la siguiente subsección
-\end{itemize}
+Because we are using $M$ centroids for each cluster instead of one,
+we adapt the cluster centres initialization and the computation
+of the most similar cluster to a non-centroid vector.
+In the next subsections we first show how we use the similarity-based
+initial centroid selection for the $M \times K$ cluster centres,
+then we explain how do we get the closest cluster of a non-centroid
+vector by iterate over each of the $M$ cluster centres of each cluster.
+Finally we explain our principal contribution to the FPAC algorithm
+trying to generalize the heuristc of selecting the document
+with the highest number of distinc terms.
+
+
+\subsection{Selecting initial cluster centres}
+
+We use the same idea of selecting a random document, grow a region around it and choose as the next candidate centroid a document that does not belong to this region. We took advantage of the computation of the region related to a documet for the assigment of the $M$ cluster centres in a cluster.
+
+First we select a random vector $C_{11}$, as the centroid of the first cluster, then we get its $M - 1$ most similar vectors and assign each of
+this vectors as a centroid of the first cluster, so we get the centres 
+$C_{11}, C_{12},  \dots, C_{1M}$. For the second cluster centroids
+we get one unrelated vector from the first cluster centres and 
+repeat the computation of the $M-1$ most similars vectors and they 
+assigment to this centroid, such that we get $C_{21}, \dots, C_{2M}$.
+For the next cluster, a vector is chosen such that does not related with the centroids of the first two clusters, and define the $M-1$ remaing cluster centres of this cluster from the top list of that vector. This process continues until we have defined the $M$ cluster centres for $K$ clusters.
+
+\subsection{Clustering non-centroid vectors}
+
+Compared to the FPAC algorithm, instead of only iterate through
+$K$ clusters, we should also go through $M$ vectors for each cluster.
+We assign a non-centroid vector to the cluster for which the sum of 
+normalized similarity score of the $M$ centroids of each cluster is maximum.
+For doing that we obtain the ranked lists of each centroid to check if 
+it is similar. For each cluster we compute a local normalized similarity score and assign the vector to the cluster with the highest value.
+
+If a non-centroid vector does not appear in any one of the
+top lists we randomly assign a cluster to it.
+
 
 \subsection{Recomputation of the cluster centres}
+
+
+
+%\begin{itemize}
+%\item Describir en el paso en el algoritmo en que nos concentramos
+%\item Describir la adaptación que se hizo a los demás pasos para que utilizara varios
+%centroides, initCentroids() y getClosestCluster()
+%\item Tal vez sea bueno escribir un poco sobre el problema de ser cover y la aproximación greedy
+%\item introducir un poco de lo que se habla en la siguiente subsección
+%\end{itemize}
 
 \begin{itemize}
 \item Describir el procedimiento
