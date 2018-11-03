@@ -311,6 +311,20 @@ we choose two datasets: the 20 Newsgroups and the sentiment140 dataset.
 The 20 Newsgroup consists of 20000 messages taken from 20 newsgroups. 
 The sentiment140 collection it is composed by 1.6 million tweets and contains a list of words and their associations with positive and negative sentiment.
 
+
+\begin{table}
+\centering
+\caption{DataSets (ACOMODAR).}\label{tab1}
+\begin{tabular}{|l|l|l|}
+\hline
+Name DataSet &  Data & Labels\\
+\hline
+Sentiment140 &  1,600,000& 2\\
+20 Newsgroups & 11,293 & 20\\
+\hline
+\end{tabular}
+\end{table}
+
 %
 %\begin{itemize}
 %\item Por qué no usamos el TREC Microblog Dataset
@@ -320,31 +334,69 @@ The sentiment140 collection it is composed by 1.6 million tweets and contains a 
 %\end{itemize}
 
 \subsection{Clustering evaluation}
-\begin{itemize}
-\item Medidas que utilizamos para evaluar el clustering y hablar un poco de las clases
-que hay de cada conjunto que se utilizó
-\item Purity
-\item NMI
-\item RI
 
-\end{itemize}
-%
-%\subsection{Implementation}
-%
-%Decir que utilizamos como base lo desarrollado por Ganguly usando Lucene
+This section introduces about external criteria of clustering quality. Purity is
+a simple and transparent evaluation measure. Normalized mutual information
+can be information-theoretically interpreted. The Rand index penalizes both
+false-positive and false-negative decisions during clustering.
+To compute purity, each cluster is assigned to the class which is most frequent
+in the cluster, and then the accuracy of this assignment is measured
+by counting the number of correctly assigned documents and dividing by N.
+Formally:
+\begin{equation}
+x + y = z
+\end{equation}
+
+Bad clusterings
+have purity values close to 0, a perfect clustering has a purity of 1.
+A measure that allows us to make this tradeoff is normalized mutual information or NMI:
+\begin{equation}
+x + y = z
+\end{equation}
+
+I is mutual information
+\begin{equation}
+x + y = z
+\end{equation}
+
+H is entropy
+\begin{equation}
+x + y = z
+\end{equation}
+
+We want to assign two documents to the same
+cluster if and only if they are similar. A true-positive (TP) decision assigns
+two similar documents to the same cluster, a true-negative (TN) decision assigns
+two dissimilar documents to different clusters. There are two types of
+errors we can commit. A false-positive (FP) decision assigns two dissimilar
+documents to the same cluster. A false-negative (FN) decision assigns two
+similar documents to different clusters. The Rand index (RI) measures the RI
+percentage of decisions that are correct. That is, it is simply accuracy
+\begin{equation}
+x + y = z
+\end{equation}
+
+
 \subsection{Compared approaches}
 
-Decir que comparamos esta versión del FPAC M centroids con K means normal, SKMeans y FPAC.
+
+We use four baselines clustering methods. We employ the next algorithms: 
+$K$-means, $SK$-means and two versions of the FPAC, a version with
+the recomputation of the centre clusters using the classic approach from
+the $K$-means and the other using the heuristics-based approach of maximum
+term coverage. We compare the previous procedures with our FPAC version
+that uses $M$ centroids.
 
 \subsection{Parameters}
 
 
 
-\begin{itemize}
-\item El valor de K
-\item el número de iteraciones
-\item El valor de M
-\end{itemize}
+%
+%\begin{itemize}
+%\item El valor de K
+%\item el número de iteraciones
+%\item El valor de M
+%\end{itemize}
 
 \section{Results}
 
