@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{algorithmic, algorithm}
 \usepackage{graphicx}
+\usepackage{amsmath}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -343,26 +344,35 @@ To compute purity, each cluster is assigned to the class which is most frequent
 in the cluster, and then the accuracy of this assignment is measured
 by counting the number of correctly assigned documents and dividing by N.
 Formally:
-\begin{equation}
-x + y = z
-\end{equation}
+\[
+purity(\Omega, C) = \frac{1}{N} \sum_k \max_j |\omega_k \cap c_j|
+\]
+
 
 Bad clusterings
 have purity values close to 0, a perfect clustering has a purity of 1.
 A measure that allows us to make this tradeoff is normalized mutual information or NMI:
-\begin{equation}
-x + y = z
-\end{equation}
+\[
+NMI(\Omega, C) = \frac{I(\Omega; C)}{[H(\Omega) + H(C)] / 2}.
+\]
 
-I is mutual information
-\begin{equation}
-x + y = z
-\end{equation}
+$I$ is mutual information
 
-H is entropy
-\begin{equation}
-x + y = z
-\end{equation}
+\[
+\begin{split}
+I(\Omega; C) &= \sum_k\sum_j P(\omega_k \cap c_j)\log\frac{P(\omega_k \cap c_j)}{P(\omega_k)P(c_j)}\\
+&= \sum_k\sum_j P(\omega_k \cap c_j)\log\frac{N|\omega_k \cap c_j|}{|\omega_k||c_j|}
+\end{split}
+\]
+
+$H$ is entropy
+\[
+\begin{split}
+H(\Omega) &= - \sum_k P(\omega_k) \log P(\omega_k)\\
+&= - \sum_k \frac{|\omega_k|}{N} \log \frac{|\omega_k|}{N}
+\end{split}
+\]
+
 
 We want to assign two documents to the same
 cluster if and only if they are similar. A true-positive (TP) decision assigns
@@ -372,9 +382,10 @@ errors we can commit. A false-positive (FP) decision assigns two dissimilar
 documents to the same cluster. A false-negative (FN) decision assigns two
 similar documents to different clusters. The Rand index (RI) measures the RI
 percentage of decisions that are correct. That is, it is simply accuracy
-\begin{equation}
-x + y = z
-\end{equation}
+
+\[
+RI = \frac{TP + TN}{TP + TN + FP + FN}
+\]
 
 
 \subsection{Compared approaches}
