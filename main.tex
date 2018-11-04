@@ -4,6 +4,7 @@
 \usepackage{algorithmic, algorithm}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage[caption = false]{subfig}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -30,18 +31,23 @@ National Institute of Astrophysics, Optics and Electronics\\
 \email{edgarmoy.28@gmail.com}}
 \maketitle              % typeset the header of the contribution
 \begin{abstract}
-En este trabajo presentamos una modificación al algoritmo K-means usando una heurística que permite hacer el recalculo de centroides de una manera diferente al k-means tradicional. El procedimiento se basa en…primero, después, por ultimo.
+The Fast Partitional Clusting algorithm scale-up
+$K$-means clustering for large documents collection
+by using a nearest neighbour based heuristic.
+In this work we proposed an more general
+approach to the recomputation of the cluster centroids 
+by not only using one centroid with the maximum length for each cluster
+but $M$ cluster centres that covers the maximum number
+of unique terms of the vocabulary of a cluster.
 
-\keywords{Clustering  \and Information Retrieval \and FPAC}
+\keywords{Clustering  \and Information Retrieval \and Set-Covering \and K-means}
 \end{abstract}
-%
-%
-%
+
 \section{Introduction}
 
 
 The amount of information, specifically text, that is generated everyday
-is increasing rapidly and dramatically. This necessitates application of effective and efficient content management techniques to fulfill the task of finding groups of similar documents in a collection of documents. This task is also known as 
+is increasing rapidly and dramatically \cite{mehdi_assefi_saied_trippe_d._gutierrez_juan_krys_2017}. This necessitates application of effective and efficient content management techniques to fulfill the task of finding groups of similar documents in a collection of documents. This task is also known as 
 clustering. These document clusters can then be useful for a variety
 of applications, such as document alignment, information retrieval
 (IR), text classification, etc \cite{ganguly_2018}.
@@ -53,7 +59,7 @@ an objective function that evaluates the quality of a clustering.
 we want to compute an assignment $\gamma : D \rightarrow \{1, \dots , K \}$ that minimizes (or, in other cases,
 maximizes) the objective function. In most cases, we also demand that $\gamma$ is
 surjective, that is, that none of the $K$ clusters is empty.
-The objective function is often defined in terms of similarity or distance between documents.
+The objective function is often defined in terms of similarity or distance between documents \cite{manning_2009}.
 
 $K$-means is perhaps the most widely used clustering algorithm
 because of its simplicity and efficiency. The objective in $K$-means clustering is to minimize the average distance between documents and their
@@ -76,10 +82,9 @@ assigning vectors to one of the centres (interchangeably referred to
 as ‘cluster centres’); and (b) recomputing the centres. Concretely
 speaking, the computation required to assign each vector in the
 collection to one of the centroids is expensive because it involves
-computing the similarity of this data point with every cluster cen-
-tre, which is an expensive operation if the collection is very large.
+computing the similarity of this data point with every cluster centre, which is an expensive operation if the collection is very large.
 
-Since the introduction to the $K$-means algorithm, research
+Since the introduction of the $K$-means algorithm, research
 has progressed towards making it more efficient for cases where
 the number of data points or the dimensionality of the data is
 large, e.g. the case when the dataset is comprised of a collection
@@ -89,7 +94,8 @@ The Fast Partitional Clustering Algorithm (FPAC) \cite{ganguly_2018}
 involves the nearest neighbour based heuristic to
 scale up $K$-means clustering for large document collections.
 The main contribution of the FPAC on the $K$-means algorithm
-is the use of an operation, namely $TOP(x)$ which gives a list
+is the use of an operation, namely 
+$TOP(x)$, which gives a list
 of the top mos similar vectors with respect to the current vector.
 This operation is used in the three fundamental steps of the 
 $K$-mean, the selection of the initial cluster centres,
@@ -101,7 +107,7 @@ In the FPAC algorithm they select as the cluster centroid the
 vector with the highest number of distinct terms. Despite the efficiency
 of just take the vector with the maximum number of unique terms,
 what happen if the set of terms in the vector is disjoint from 
-the other set of terms in the cluster vocabulary. That 
+the other set of terms in the cluster vocabulary. This 
 case inspired us to develop a solution based on the set cover problem.
 
 Our contribution is the extension of the method for the recomputation of  the cluster centroids. Instead of using just one centroid that tries to
@@ -150,7 +156,7 @@ is called $TOP(x)$ and is efficiently computated by using a
 inverted index data structure.
 
 In a very general way we can hightlight three fundamental
-steps in the FPAC algorithm: the selection of the initial centroids, the assinment of a cluster to a non-centroid vector and the recomputation of the cluster centres.
+steps in the FPAC algorithm: the selection of the initial centroids, the assignment of a cluster to a non-centroid vector and the recomputation of the cluster centres.
 
 To ensure that the initially selected cluster centres are dissimilar
 to each other, they select the first cluster centre, $C_1$, randomly from
@@ -185,8 +191,8 @@ show an increase in the execution speed attributed to the IR-based approach
 and the two additional heuristics related to initial centroid selection and 
 centroid recomputation.
 
-The FPAC similarity-based initial centroids selection
-produces the best results in terms of clustering effectiveness.
+% The FPAC similarity-based initial centroids selection
+% produces the best results in terms of clustering effectiveness.
 The maximum term coverage based heuristics yields better in
 comparasion to SK-means. However, the results with the
 maximum term coverage heuristics is worse than a version of
@@ -234,7 +240,7 @@ then we explain how do we get the closest cluster of a non-centroid
 vector by iterate over each of the $M$ cluster centres of each cluster.
 Finally we explain our principal contribution to the FPAC algorithm
 trying to generalize the heuristc of selecting the document
-with the highest number of distinc terms.
+with the highest number of distinct terms.
 
 
 \subsection{Selecting initial cluster centres}
@@ -264,7 +270,7 @@ top lists we randomly assign a cluster to it.
 
 For computing the new set of $M$ centroids for each cluster
 we try a solution similar to the greedy approximation
-algorithm  for the set covering problem.
+algorithm  for the set covering problem \cite{cormen_leiserson_rivest_stein_2009}.
 An instance $(X, \mathcal{F})$ of the set-covering problem consists of
 a finite set $X$ and a family $\mathcal{F}$ of subsets of $X$, such that 
 every element of $X$ belongs to at least one subset in $\mathcal{F}$
@@ -308,23 +314,22 @@ This method is explained in detail in the Algorithm \ref{alg1}.
 
 We could not replicate the experiments on the same collection of
 documents proposed by Ganguly\cite{ganguly_2018}. However 
-we choose two datasets: the 20 Newsgroups and the sentiment140 dataset.
-The 20 Newsgroup consists of 20000 messages taken from 20 newsgroups. 
-The sentiment140 collection it is composed by 1.6 million tweets and contains a list of words and their associations with positive and negative sentiment.
+we choose two reduced versions of the datasets:  20 Newsgroups\cite{2007:phd-Ana-Cardoso-Cachopo} and the sentiment140 \cite{sentiment140}.
+The version used for the 20 Newsgroup consists of 11,293 messages taken from 20 newsgroups. 
+The version of the sentiment140 collection it is composed by 100,000 tweets and contains a list of words and their associations with positive and negative sentiment.
 
-
-\begin{table}
-\begin{tabular}{|l|l|l|}
-\hline
-Name DataSet &  Data & Labels\\
-\hline
-Sentiment140 &  100,000& 2\\
-20 Newsgroups & 11,293 & 20\\
-\hline
-\end{tabular}
-\centering
-\caption{DataSets}\label{tab1}
-\end{table}
+% \begin{table}
+% \begin{tabular}{|l|l|l|}
+% \hline
+% Name DataSet &  Data & Labels\\
+% \hline
+% Sentiment140 &  100,000& 2\\
+% 20 Newsgroups & 11,293 & 20\\
+% \hline
+% \end{tabular}
+% \centering
+% \caption{DataSets}\label{tab1}
+% \end{table}
 
 %
 %\begin{itemize}
@@ -336,27 +341,27 @@ Sentiment140 &  100,000& 2\\
 
 \subsection{Clustering evaluation}
 
-This section introduces about external criteria of clustering quality. Purity is
+To measure the clustering quality of the methods we
+use three criteria: purity, Normalized mutual information and Rand Index. Purity is
 a simple and transparent evaluation measure. Normalized mutual information
 can be information-theoretically interpreted. The Rand index penalizes both
 false-positive and false-negative decisions during clustering.
+
 To compute purity, each cluster is assigned to the class which is most frequent
 in the cluster, and then the accuracy of this assignment is measured
-by counting the number of correctly assigned documents and dividing by N.
-Formally:
+by counting the number of correctly assigned documents and dividing by the total number of documents, $N$.
+
 \[
 purity(\Omega, C) = \frac{1}{N} \sum_k \max_j |\omega_k \cap c_j|
 \]
 
 
-Bad clusterings
-have purity values close to 0, a perfect clustering has a purity of 1.
-A measure that allows us to make this tradeoff is normalized mutual information or NMI:
+The normalized mutual information or NMI is given by
 \[
 NMI(\Omega, C) = \frac{I(\Omega; C)}{[H(\Omega) + H(C)] / 2}.
 \]
 
-$I$ is mutual information
+Where $I$ is the mutual information
 
 \[
 \begin{split}
@@ -365,14 +370,13 @@ I(\Omega; C) &= \sum_k\sum_j P(\omega_k \cap c_j)\log\frac{P(\omega_k \cap c_j)}
 \end{split}
 \]
 
-$H$ is entropy
+and $H$ the entropy
 \[
 \begin{split}
 H(\Omega) &= - \sum_k P(\omega_k) \log P(\omega_k)\\
-&= - \sum_k \frac{|\omega_k|}{N} \log \frac{|\omega_k|}{N}
+&= - \sum_k \frac{|\omega_k|}{N} \log \frac{|\omega_k|}{N}.
 \end{split}
 \]
-
 
 We want to assign two documents to the same
 cluster if and only if they are similar. A true-positive (TP) decision assigns
@@ -384,7 +388,7 @@ similar documents to different clusters. The Rand index (RI) measures the RI
 percentage of decisions that are correct. That is, it is simply accuracy
 
 \[
-RI = \frac{TP + TN}{TP + TN + FP + FN}
+RI = \frac{TP + TN}{TP + TN + FP + FN}.
 \]
 
 
@@ -401,31 +405,57 @@ that uses $M$ centroids.
 \subsection{Parameters}
 
 
-
-%
-%\begin{itemize}
-%\item El valor de K
-%\item el número de iteraciones
-%\item El valor de M
-%\end{itemize}
+For now we only carry out a few experiments. For simplicity
+we define the value of $K$ as the same of the number of
+reference classes of each collection of documents. For the
+Sentiment140 we have two classes so $K = 2$. And for
+the 20 Newsgroups we set $K = 20$. The number of iterations 
+is 100, and we did not define a stop criterion based
+on the rate of change in the allocation of clusters to non-centroid vectors. We tasted 3 values for the number $M$
+of centroids in each cluster.
+The fraction of the documents reassigned to different clusters
+on every iterationwas also measured.
 
 \section{Results}
 
+\subsection{Comparasion of execution time}
+
+The Figure \ref{fig:runtimes} shows the runtimes
+of executing the algorithms and its variants for 
+both of the documents collections. We can see that
+the running time for our version of the FPAC algorithm
+increases more quickly because the use of the $M$
+centroid for each cluster.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{graph20.png}
+\subfloat{\includegraphics[scale=0.25]{graph20.png}}
+\subfloat{\includegraphics[scale=0.25]{graphtweets.png}}
+\caption{Time of execution of the clustering methos for a hundred iterations.}
+\label{fig:runtimes}
 \end{figure}
 
+\subsection{Comparasion of clustering quality}
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{graphtweets.png}
-\end{figure}
+Tables \ref{tab:sentiment140} and \ref{tab:20news}
+reports the evaluation measures for the each 
+dataset.
+We can observe that the clustering method with the
+most outstanding results the FPAC version with the
+true centroids computation.
+For the Sentiment140 dataset the obtained
+results are equally bad. 
+Table \ref{tab:20news} shows that the worst 
+clustering method for the RI measure is 
+the classic $K$-means but it has a little better purity
+along with the FPAC algorithm.
+Also we can see that apparently the fraction of the documents reassigned to different clusters in every iteration decreases with respect to the value of $M$.
+
 
 \begin{table}[]
 \centering
 \caption{Comparasion betweet the clustering methods and their variants for the Sentiment140 dataset.}
+\label{tab:sentiment140}
 \begin{tabular}{lllll}
 \hline
 Clustering algorithm & Purity  & NMI      & RI      & \begin{tabular}[c]{@{}l@{}}Change ratio\\ average\end{tabular} \\ \hline
@@ -442,6 +472,7 @@ FPAC-50 centroids    & 0.50189 & 0.000010 & 0.50000 & 0.49937                   
 \begin{table}[]
 \centering
 \caption{Comparasion betweet the clustering methods and their variants for the 20 newsgruop dataset.}
+\label{tab:20news}
 \begin{tabular}{lllll}
 \hline
 Clustering algorithm & Purity  & NMI      & RI      & \begin{tabular}[c]{@{}l@{}}Change ratio\\ average\end{tabular} \\ \hline
@@ -457,20 +488,7 @@ FPAC-100 centroids    & 0.06818 & 0.00492 & 0.90462 & 0.78195 \\ \hline
 \end{tabular}
 \end{table}
 
-
-\begin{itemize}
-\item Por cada dataset una gráfica del NMI, Purity y RI
-\item 
-\end{itemize}
 \section{Conclusions and future work}
-
-%
-% ---- Bibliography ----
-%
-% BibTeX users should specify bibliography style 'splncs04'.
-% References will then be sorted and formatted in the correct style.
-%
 \bibliographystyle{splncs04}
 \bibliography{references}
-%
 \end{document}
